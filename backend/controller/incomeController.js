@@ -18,11 +18,6 @@ exports.addIncome = async (req, res) => {
             return res.status(400).json({ message: "All fields are required!" });
         }
 
-        // // 🔹 Validation: Ensure amount is a valid positive number
-        // if (amount <= 0 || typeof amount !== "number") {
-        //     return res.status(400).json({ message: "Amount must be a positive number!" });
-        // }
-
         // ✅ Save income to database
         await income.save();
         res.status(201).json({ message: "Income Added" });

@@ -4,9 +4,14 @@ const Port = process.env.PORT || 3000 ;
 const cors = require('cors');
 const {db} = require("./dataBase/db");
 const { readdirSync } = require('fs');
+const path = require('path');
+// Import Routes
+const incomeRoutes = require("./routes/income");
+const expenseRoutes = require("./routes/expence");
 
 const app = express();
 
+const _dirname = path.resolve();
 // middleware
 app.use(express.json())
 app.use(cors({
@@ -15,7 +20,14 @@ app.use(cors({
 }))
 
 //routes
-readdirSync('./routes').map((route) => app.use('/api/v1', require('./routes/' + route)))
+// Use Routes with Specific Base Paths
+app.use("/api/v1/income", incomeRoutes);
+app.use("/api/v1/expense", expenseRoutes);
+
+app.use(express.static(path.join(_dirname, "/frontend/dist")));
+app.get('*', (req, res)=>{
+    res.sendFile(path.resolve(_dirname, "frontend", "dist", "index.html"));
+});
 
 const server = ()=> {
     db()
